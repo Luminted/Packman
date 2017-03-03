@@ -1,0 +1,15 @@
+body {
+	width:100%;
+
+}
+.firstpage {
+	
+	text-align:center;
+}
+.secondpage {
+	display:none;
+}
+.secondpage h1 {
+	text-align:center;
+	color:blue;
+}
