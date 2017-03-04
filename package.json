@@ -1,0 +1,23 @@
+{
+  "name": "packman",
+  "version": "0.0.1",
+  "description": "Project tools project",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Luminted/Packman.git"
+  },
+  "keywords": [
+    "packman",
+    "student_work"
+  ],
+  "author": "Three People From IK",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Luminted/Packman/issues"
+  },
+  "homepage": "https://github.com/Luminted/Packman#readme"
+}
