@@ -14,3 +14,10 @@
 ##Evolúció:
 
 * automatikusan generált pálya
+
+##Technikai részletek
+
+* build parancs: grunt
+* szevrer cím: localhost:8080
+
+Node verzió: v6.10.0
