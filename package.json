@@ -29,8 +29,12 @@
     "grunt-contrib-uglify": "^2.2.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-webpack": "^2.0.1",
+    "jquery": "^3.1.1",
     "matchdep": "^1.0.1",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.4.1"
+  },
+  "dependencies": {
+    "jquery": "^3.1.1"
   }
 }
