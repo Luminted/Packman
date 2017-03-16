@@ -17,6 +17,10 @@
 
 ##Technikai részletek
 
+###Fejlesztői környezet telepítése
+* npm install parancs kiadása a gyökérmapában
+* és kész
+
 * build parancs: npm run webpack
 * dev-szerver indítása: npm run grunt
 * szevrer cím: localhost:8080
