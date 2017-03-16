@@ -22,7 +22,7 @@
 * és kész
 
 * build parancs: npm run webpack
-* dev-szerver indítása: npm run grunt
+* dev-szerver indítása: npm run grunt  <-- elég ezt használni fejlesztéshez, folyamatosan frissíti a szervert ha változik a kód
 * szevrer cím: localhost:8080
 
 Node verzió: v6.10.0
