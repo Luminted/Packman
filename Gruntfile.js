@@ -25,7 +25,7 @@ module.exports = function(grunt) {
 		"webpack-dev-server": {
 			options: {
 				webpack: webpackConfig,
-				contentBase: path.join(__dirname, "build"),
+				contentBase: path.join(__dirname, "src"),
 				publicPath: "/" + webpackConfig.output.publicPath,
 				inline: true,
 				port: 8080

@@ -17,7 +17,8 @@
 
 ##Technikai részletek
 
-* build parancs: grunt
+* build parancs: npm run webpack
+* dev-szerver indítása: npm run grunt
 * szevrer cím: localhost:8080
 
 Node verzió: v6.10.0
