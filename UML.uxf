@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="13.3">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.baselet.element.old.element.Class</type>
+    <coordinates>
+      <x>460</x>
+      <y>150</y>
+      <w>210</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>Scene
+--
++Renderer
+-Entities
+-Resources
+-SoundSystem
+-EventListener
+-ControllerSystem
+--
+getterek
+setterek</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.element.Class</type>
+    <coordinates>
+      <x>760</x>
+      <y>160</y>
+      <w>140</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>SoundSystem
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>
