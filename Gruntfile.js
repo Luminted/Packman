@@ -1,6 +1,9 @@
 var path = require("path");
-module.exports = function(grunt) {
-	require("matchdep").filterAll("grunt-*").forEach(grunt.loadNpmTasks);
+module.exports = function (grunt) {
+	// load npm tasks for grunt-* libs, excluding grunt-cli
+	require('matchdep').filterDev('grunt-*').filter(function (pkg) {
+		return ['grunt-cli'].indexOf(pkg) < 0;
+	}).forEach(grunt.loadNpmTasks);
 	var webpack = require("webpack");
 	var webpackConfig = require("./webpack.config.js");
 	grunt.initConfig({
@@ -27,7 +30,7 @@ module.exports = function(grunt) {
 				webpack: webpackConfig,
 				contentBase: path.join(__dirname, "src"),
 				publicPath: "/" + webpackConfig.output.publicPath,
-				inline: true,
+				inline: false,
 				port: 8080
 			},
 			start: {
@@ -44,8 +47,26 @@ module.exports = function(grunt) {
 					spawn: false,
 				}
 			}
-		}
+		},
+		copy: {
+			main: {
+				files: [
+					// includes files within path
+					{
+						expand: true,
+						cwd: 'src/',
+						src: ['**/*.html', '**/*.css'],
+						dest: 'build/',
+						filter: 'isFile'
+					},
+				],
+			},
+		},
+		clean: ['build/*.html', 'build/*.css']
 	});
+
+	grunt.loadNpmTasks('grunt-contrib-clean');
+	grunt.loadNpmTasks('grunt-contrib-copy');
 
 	// The development server (the recommended option for development)
 	grunt.registerTask("default", ["webpack-dev-server:start"]);
@@ -54,8 +75,9 @@ module.exports = function(grunt) {
 	// Advantage: No server required, can run app from filesystem
 	// Disadvantage: Requests are not blocked until bundle is available,
 	//               can serve an old app on too fast refresh
-	grunt.registerTask("dev", ["webpack", "webpack-dev-server:start", "watch:app"]);
+	grunt.registerTask("server", ["webpack-dev-server:start"]);
 
 	// Production build
-	grunt.registerTask("build", ["webpack:build"]);
+	grunt.registerTask("build", ["clean","webpack","copy"]);
+
 };
