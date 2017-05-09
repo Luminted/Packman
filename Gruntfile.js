@@ -55,14 +55,13 @@ module.exports = function (grunt) {
 					{
 						expand: true,
 						cwd: 'src/',
-						src: ['**/*.html', '**/*.css'],
-						dest: 'build/',
-						filter: 'isFile'
+						src: ['**/*', '!js'],
+						dest: 'build/'
 					},
 				],
 			},
 		},
-		clean: ['build/*.html', 'build/*.css']
+		clean: ['build/*']
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-clean');
