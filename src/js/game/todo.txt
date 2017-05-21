@@ -1,0 +1,9 @@
+Pacman feltöltendõ classok
+
+1. Ghost
+2.PacmanUser
+3.Pacman map
+4. Audio
+5. Pacman
+6. Key
+7. Map
