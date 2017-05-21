@@ -1,7 +1,7 @@
 Pacman feltöltendõ classok
 
 1. Ghost			PIPA
-2.PacmanUser
+2.PacmanUser		PIPA
 3.Pacman map
 4. Audio
 5. Pacman
