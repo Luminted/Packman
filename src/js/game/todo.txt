@@ -5,5 +5,5 @@ Pacman feltöltendõ classok
 3.Pacman map		PIPA
 4. Audio			PIPA
 5. Pacman			PIPA
-6. Key
+6. Key				PIPA
 7. Map
