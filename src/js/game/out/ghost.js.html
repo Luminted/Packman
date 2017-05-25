@@ -29,23 +29,16 @@
             <pre class="prettyprint source linenums"><code>/** 
  * Szellem osztály definíció és implementáció
  */
-class Ghost  {
+Pacman.Ghost = function (game, map, colour) {67
 
-    constructor(game, map, colour){
-        var game = game;
-        var map = map;
-        var colour = colour;
-        var position  = null,
+    var position  = null,
         direction = null,
         eatable   = null,
         eaten     = null,
         due       = null;
-    };
-
-    
     
     /** Mozgatás*/
-    getNewCoord(dir, current) { 
+    function getNewCoord(dir, current) { 
         
         var speed  = isVunerable() ? 1 : isHidden() ? 4 : 2,
             xSpeed = (dir === LEFT &amp;&amp; -speed || dir === RIGHT &amp;&amp; speed || 0),
@@ -60,7 +53,7 @@ class Ghost  {
     /**
      * Szellem falakon bellül tartása
      */
-    addBounded(x1, x2) { 
+    function addBounded(x1, x2) { 
         var rem    = x1 % 10, 
             result = rem + x2;
         if (rem !== 0 &amp;&amp; result > 10) {
@@ -71,22 +64,22 @@ class Ghost  {
         return x1 + x2;
     };
     
-     isVunerable() { 
+    function isVunerable() { 
         return eatable !== null;
     };
     
-     isDangerous() {
+    function isDangerous() {
         return eaten === null;
     };
 
-     isHidden() { 
+    function isHidden() { 
         return eatable === null &amp;&amp; eaten !== null;
     };
     
     /**
      * Az irányt eldöntő függvény. Jelenleg a szellemek véletlenszerűen közlekednek
      */
-     getRandomDirection() {
+    function getRandomDirection() {
         var moves = (direction === LEFT || direction === RIGHT) 
             ? [UP, DOWN] : [LEFT, RIGHT];
         return moves[Math.floor(Math.random() * 2)];
@@ -95,7 +88,7 @@ class Ghost  {
     /**
      * Szellem resetelése
      */
-     reset() {
+    function reset() {
         eaten = null;
         eatable = null;
         position = {"x": 90, "y": 80};
@@ -103,14 +96,14 @@ class Ghost  {
         due = getRandomDirection();
     };
     
-     onWholeSquare(x) {
+    function onWholeSquare(x) {
         return x % 10 === 0;
     };
     
     /**
      * ellenkező irány számontartása
      */
-     oppositeDirection(dir) { 
+    function oppositeDirection(dir) { 
         return dir === LEFT &amp;&amp; RIGHT ||
             dir === RIGHT &amp;&amp; LEFT ||
             dir === UP &amp;&amp; DOWN || UP;
@@ -119,7 +112,7 @@ class Ghost  {
 /**
  * Ehetővé teszi a szellemet;
  */
-     makeEatable() {
+    function makeEatable() {
         direction = oppositeDirection(direction);
         eatable = game.getTick();
     };
@@ -127,19 +120,19 @@ class Ghost  {
     /**
      * Elmenti az időpillanatot amikor megették és ehetetlenné teszi magát
      */
-     eat() { 
+    function eat() { 
         eatable = null;
         eaten = game.getTick();
     };
 
-     pointToCoord(x) {
+    function pointToCoord(x) {
         return Math.round(x / 10);
     };
 
     /**
      * Visszaadja a következő mező koordinátáit
      */
-     nextSquare(x, dir) {
+    function nextSquare(x, dir) {
         var rem = x % 10;
         if (rem === 0) { 
             return x; 
@@ -153,18 +146,18 @@ class Ghost  {
     /**
      * Visszaadja hogy teljesen egy mezőn van-e
      */
-     onGridSquare(pos) {
+    function onGridSquare(pos) {
         return onWholeSquare(pos.y) &amp;&amp; onWholeSquare(pos.x);
     };
 
     /**
      * delta idő számolása
      */
-     secondsAgo(tick) { 
+    function secondsAgo(tick) { 
         return (game.getTick() - tick) / Pacman.FPS;
     };
 
-     getColour() { 
+    function getColour() { 
         if (eatable) { 
             if (secondsAgo(eatable) > 5) { 
                 return game.getTick() % 20 > 10 ? "#FFFFFF" : "#0000BB";
@@ -177,7 +170,7 @@ class Ghost  {
         return colour;
     };
 		/** Szellem render függvény */
-     draw(ctx) {
+    function draw(ctx) {
   
         var s    = map.blockSize, 
             top  = (position.y/10) * s,
@@ -244,7 +237,7 @@ class Ghost  {
     /**
      * Képernyő másik oldalán megjelenés kezelésére
      */
-     pane(pos) {
+    function pane(pos) {
 
         if (pos.y === 100 &amp;&amp; pos.x >= 190 &amp;&amp; direction === RIGHT) {
             return {"y": 100, "x": -10};
@@ -257,7 +250,7 @@ class Ghost  {
         return false;
     };
     /** Mesterséges Intelligencia */
-     move(ctx) {
+    function move(ctx) {
         
         var oldPos = position,
             onGrid = onGridSquare(position),
@@ -306,10 +299,7 @@ class Ghost  {
         };
     };
     
-
-};
-
-    export default {
+    return {
         "eat"         : eat,
         "isVunerable" : isVunerable,
         "isDangerous" : isDangerous,
@@ -317,7 +307,8 @@ class Ghost  {
         "reset"       : reset,
         "move"        : move,
         "draw"        : draw
-    };</code></pre>
+    };
+};</code></pre>
         </article>
     </section>
 
@@ -327,13 +318,13 @@ class Ghost  {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Ghost.html">Ghost</a></li></ul>
+    <h2><a href="index.html">Home</a></h2>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Thu May 25 2017 15:22:12 GMT+0200 (Central Europe Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Thu May 25 2017 18:26:41 GMT+0200 (Central Europe Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>
