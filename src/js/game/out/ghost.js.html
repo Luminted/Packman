@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: ghost.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: ghost.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** 
+ * Szellem osztály definíció és implementáció
+ */
+class Ghost  {
+
+    constructor(game, map, colour){
+        var game = game;
+        var map = map;
+        var colour = colour;
+        var position  = null,
+        direction = null,
+        eatable   = null,
+        eaten     = null,
+        due       = null;
+    };
+
+    
+    
+    /** Mozgatás*/
+    getNewCoord(dir, current) { 
+        
+        var speed  = isVunerable() ? 1 : isHidden() ? 4 : 2,
+            xSpeed = (dir === LEFT &amp;&amp; -speed || dir === RIGHT &amp;&amp; speed || 0),
+            ySpeed = (dir === DOWN &amp;&amp; speed || dir === UP &amp;&amp; -speed || 0);
+    
+        return {
+            "x": addBounded(current.x, xSpeed),
+            "y": addBounded(current.y, ySpeed)
+        };
+    };
+
+    /**
+     * Szellem falakon bellül tartása
+     */
+    addBounded(x1, x2) { 
+        var rem    = x1 % 10, 
+            result = rem + x2;
+        if (rem !== 0 &amp;&amp; result > 10) {
+            return x1 + (10 - rem);
+        } else if(rem > 0 &amp;&amp; result &lt; 0) { 
+            return x1 - rem;
+        }
+        return x1 + x2;
+    };
+    
+     isVunerable() { 
+        return eatable !== null;
+    };
+    
+     isDangerous() {
+        return eaten === null;
+    };
+
+     isHidden() { 
+        return eatable === null &amp;&amp; eaten !== null;
+    };
+    
+    /**
+     * Az irányt eldöntő függvény. Jelenleg a szellemek véletlenszerűen közlekednek
+     */
+     getRandomDirection() {
+        var moves = (direction === LEFT || direction === RIGHT) 
+            ? [UP, DOWN] : [LEFT, RIGHT];
+        return moves[Math.floor(Math.random() * 2)];
+    };
+    
+    /**
+     * Szellem resetelése
+     */
+     reset() {
+        eaten = null;
+        eatable = null;
+        position = {"x": 90, "y": 80};
+        direction = getRandomDirection();
+        due = getRandomDirection();
+    };
+    
+     onWholeSquare(x) {
+        return x % 10 === 0;
+    };
+    
+    /**
+     * ellenkező irány számontartása
+     */
+     oppositeDirection(dir) { 
+        return dir === LEFT &amp;&amp; RIGHT ||
+            dir === RIGHT &amp;&amp; LEFT ||
+            dir === UP &amp;&amp; DOWN || UP;
+    };
+
+/**
+ * Ehetővé teszi a szellemet;
+ */
+     makeEatable() {
+        direction = oppositeDirection(direction);
+        eatable = game.getTick();
+    };
+
+    /**
+     * Elmenti az időpillanatot amikor megették és ehetetlenné teszi magát
+     */
+     eat() { 
+        eatable = null;
+        eaten = game.getTick();
+    };
+
+     pointToCoord(x) {
+        return Math.round(x / 10);
+    };
+
+    /**
+     * Visszaadja a következő mező koordinátáit
+     */
+     nextSquare(x, dir) {
+        var rem = x % 10;
+        if (rem === 0) { 
+            return x; 
+        } else if (dir === RIGHT || dir === DOWN) { 
+            return x + (10 - rem);
+        } else {
+            return x - rem;
+        }
+    };
+
+    /**
+     * Visszaadja hogy teljesen egy mezőn van-e
+     */
+     onGridSquare(pos) {
+        return onWholeSquare(pos.y) &amp;&amp; onWholeSquare(pos.x);
+    };
+
+    /**
+     * delta idő számolása
+     */
+     secondsAgo(tick) { 
+        return (game.getTick() - tick) / Pacman.FPS;
+    };
+
+     getColour() { 
+        if (eatable) { 
+            if (secondsAgo(eatable) > 5) { 
+                return game.getTick() % 20 > 10 ? "#FFFFFF" : "#0000BB";
+            } else { 
+                return "#0000BB";
+            }
+        } else if(eaten) { 
+            return "#222";
+        } 
+        return colour;
+    };
+		/** Szellem render függvény */
+     draw(ctx) {
+  
+        var s    = map.blockSize, 
+            top  = (position.y/10) * s,
+            left = (position.x/10) * s;
+    
+        if (eatable &amp;&amp; secondsAgo(eatable) > 8) {
+            eatable = null;
+        }
+        
+        if (eaten &amp;&amp; secondsAgo(eaten) > 3) { 
+            eaten = null;
+        }
+        
+        var tl = left + s;
+        var base = top + s - 3;
+        var inc = s / 10;
+
+        var high = game.getTick() % 10 > 5 ? 3  : -3;
+        var low  = game.getTick() % 10 > 5 ? -3 : 3;
+
+        ctx.fillStyle = getColour();
+        ctx.beginPath();
+
+        ctx.moveTo(left, base);
+
+        ctx.quadraticCurveTo(left, top, left + (s/2),  top);
+        ctx.quadraticCurveTo(left + s, top, left+s,  base);
+        
+		
+        ctx.quadraticCurveTo(tl-(inc*1), base+high, tl - (inc * 2),  base);
+        ctx.quadraticCurveTo(tl-(inc*3), base+low, tl - (inc * 4),  base);
+        ctx.quadraticCurveTo(tl-(inc*5), base+high, tl - (inc * 6),  base);
+        ctx.quadraticCurveTo(tl-(inc*7), base+low, tl - (inc * 8),  base); 
+        ctx.quadraticCurveTo(tl-(inc*9), base+high, tl - (inc * 10), base); 
+
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.fillStyle = "#FFF";
+        ctx.arc(left + 6,top + 6, s / 6, 0, 300, false);
+        ctx.arc((left + s) - 6,top + 6, s / 6, 0, 300, false);
+        ctx.closePath();
+        ctx.fill();
+
+        var f = s / 12;
+        var off = {};
+        off[RIGHT] = [f, 0];
+        off[LEFT]  = [-f, 0];
+        off[UP]    = [0, -f];
+        off[DOWN]  = [0, f];
+
+        ctx.beginPath();
+        ctx.fillStyle = "#000";
+        ctx.arc(left+6+off[direction][0], top+6+off[direction][1], 
+                s / 15, 0, 300, false);
+        ctx.arc((left+s)-6+off[direction][0], top+6+off[direction][1], 
+                s / 15, 0, 300, false);
+        ctx.closePath();
+        ctx.fill();
+
+    };
+
+    /**
+     * Képernyő másik oldalán megjelenés kezelésére
+     */
+     pane(pos) {
+
+        if (pos.y === 100 &amp;&amp; pos.x >= 190 &amp;&amp; direction === RIGHT) {
+            return {"y": 100, "x": -10};
+        }
+        
+        if (pos.y === 100 &amp;&amp; pos.x &lt;= -10 &amp;&amp; direction === LEFT) {
+            return position = {"y": 100, "x": 190};
+        }
+
+        return false;
+    };
+    /** Mesterséges Intelligencia */
+     move(ctx) {
+        
+        var oldPos = position,
+            onGrid = onGridSquare(position),
+            npos   = null;
+        
+        if (due !== direction) {
+            
+            npos = getNewCoord(due, position);
+            
+            if (onGrid &amp;&amp;
+                map.isFloorSpace({
+                    "y":pointToCoord(nextSquare(npos.y, due)),
+                    "x":pointToCoord(nextSquare(npos.x, due))})) {
+                direction = due;
+            } else {
+                npos = null;
+            }
+        }
+        
+        if (npos === null) {
+            npos = getNewCoord(direction, position);
+        }
+        
+        if (onGrid &amp;&amp;
+            map.isWallSpace({
+                "y" : pointToCoord(nextSquare(npos.y, direction)),
+                "x" : pointToCoord(nextSquare(npos.x, direction))
+            })) {
+            
+            due = getRandomDirection();            
+            return move(ctx);
+        }
+
+        position = npos;        
+        
+        var tmp = pane(position);
+        if (tmp) { 
+            position = tmp;
+        }
+        
+        due = getRandomDirection();
+        
+        return {
+            "new" : position,
+            "old" : oldPos
+        };
+    };
+    
+
+};
+
+    export default {
+        "eat"         : eat,
+        "isVunerable" : isVunerable,
+        "isDangerous" : isDangerous,
+        "makeEatable" : makeEatable,
+        "reset"       : reset,
+        "move"        : move,
+        "draw"        : draw
+    };</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Ghost.html">Ghost</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Thu May 25 2017 15:22:12 GMT+0200 (Central Europe Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
