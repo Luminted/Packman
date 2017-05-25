@@ -7,7 +7,6 @@ module.exports = function (grunt) {
 	var webpack = require("webpack");
 	var webpackConfig = require("./webpack.config.js");
 	grunt.initConfig({
-		
 		webpack: {
 			options: webpackConfig,
 			build: {
@@ -24,14 +23,6 @@ module.exports = function (grunt) {
 			},
 			"build-dev": {
 				devtool: "sourcemap"
-			}
-		},
-		"grunt-jsdoc" : {
-			dist : {
-				src: ['src/*/**.js'],
-				options: {
-					destination: 'doc'
-				}
 			}
 		},
 		"webpack-dev-server": {
@@ -75,8 +66,6 @@ module.exports = function (grunt) {
 
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-copy');
-	
-	grunt.loadNpmTasks('grunt-jsdoc');
 
 	// The development server (the recommended option for development)
 	grunt.registerTask("default", ["webpack-dev-server:start"]);
@@ -89,7 +78,5 @@ module.exports = function (grunt) {
 
 	// Production build
 	grunt.registerTask("build", ["clean","webpack","copy"]);
-	
-	//Doksi
-	grunt.registerTask("doc", ["grunt-jsdoc"]);
+
 };
